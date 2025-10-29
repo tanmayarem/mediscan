@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <h2>Medicine Interaction Checker</h2>
+  <p class="hint">Enter multiple medicines separated by commas to check for dangerous interactions.</p>
+  
+  <form method="post" action="{{ url_for('check_interactions') }}" class="upload-form" style="margin-bottom: 24px;">
+    <input type="text" name="medicines" placeholder="e.g., Ibuprofen, Aspirin, Paracetamol" required style="flex: 1;" />
+    <button type="submit">Check Interactions</button>
+  </form>
+
+  {% if result %}
+    {% if result.warnings %}
+      <div class="warning-section">
+        <h3>⚠️ Interaction Warnings</h3>
+        {% for warning in result.warnings %}
+        <div class="notice notice-{{ warning.type }}">
+          <strong>{{ warning.medicine1 }} + {{ warning.medicine2 }}</strong>
+          <p>{{ warning.description }}</p>
+          <small>Severity: {{ warning.severity|upper }}</small>
+        </div>
+        {% endfor %}
+      </div>
+      {% if result.ai_summary %}
+      <div class="card" style="margin-top: 12px;">
+        <h4>AI Summary</h4>
+        <p class="muted">Powered by Groq</p>
+        <div class="extracted">{{ result.ai_summary }}</div>
+      </div>
+      {% endif %}
+    {% else %}
+      <div class="notice success">
+        ✅ No significant interactions found between the checked medicines.
+        <p class="muted" style="margin-top: 8px;">Always consult your doctor before taking multiple medicines together.</p>
+      </div>
+    {% endif %}
+    
+    {% if result.checked_medicines %}
+      <p class="muted" style="margin-top: 16px;">Checked medicines: {{ result.checked_medicines|join(", ") }}</p>
+    {% endif %}
+  {% endif %}
+</section>
+{% endblock %}
+

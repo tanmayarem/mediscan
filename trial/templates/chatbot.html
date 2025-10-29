@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <h2>Medicine Assistant Chatbot</h2>
+  <p class="hint">Ask questions about medicines, side effects, interactions, or general health information. 
+  {% if not response or not response.sources or 'OpenAI' not in response.sources[0] and 'Groq' not in response.sources[0] %}
+  <br><small>💡 For AI-powered responses, set OPENAI_API_KEY or GROQ_API_KEY in environment variables.</small>
+  {% endif %}
+  </p>
+
+  {% if response %}
+    <div class="chat-response" style="margin-bottom: 24px;">
+      <div class="card" style="background: rgba(34, 211, 238, 0.1); border-color: rgba(34, 211, 238, 0.3);">
+        <div class="response-content">
+          {{ response.response|replace('\n', '<br>')|safe }}
+        </div>
+        {% if response.sources %}
+        <div class="response-sources" style="margin-top: 12px; font-size: 12px; color: var(--muted);">
+          Sources: {{ response.sources|join(", ") }}
+        </div>
+        {% endif %}
+        {% if response.confidence %}
+        <div class="response-confidence" style="margin-top: 8px; font-size: 12px; color: var(--muted);">
+          Confidence: {{ '%.0f'|format(response.confidence * 100) }}%
+        </div>
+        {% endif %}
+      </div>
+      <p class="muted" style="margin-top: 12px; font-size: 14px;">
+        ⚠️ This chatbot provides informational responses only. It does not provide medical advice. Always consult your doctor for medical decisions.
+      </p>
+    </div>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('chatbot') }}" class="chat-form">
+    <div style="display: flex; gap: 12px; align-items: flex-end;">
+      <div style="flex: 1;">
+        <label for="message" style="display: block; margin-bottom: 8px;">Your Question</label>
+        <textarea id="message" name="message" rows="3" placeholder="e.g., What are the side effects of Paracetamol? Can I take Ibuprofen with Aspirin?" required></textarea>
+      </div>
+      <button type="submit">Ask</button>
+    </div>
+  </form>
+
+  <div class="example-questions" style="margin-top: 24px;">
+    <h3>Example Questions</h3>
+    <ul class="example-list">
+      <li>"What are the common side effects of [medicine name]?"</li>
+      <li>"Can I take [medicine1] with [medicine2]?"</li>
+      <li>"When should I take [medicine name] - with food or empty stomach?"</li>
+      <li>"What is [medicine name] used for?"</li>
+      <li>"How long does [medicine name] stay in the body?"</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <h2>Pill Identifier</h2>
+  <p class="hint">Upload a clear photo of an unknown pill/tablet to identify it using AI vision.</p>
+  
+  <form method="post" action="{{ url_for('pill_identify') }}" enctype="multipart/form-data" class="upload-form" style="margin-bottom: 24px;">
+    <input type="file" name="image" accept="image/*" required />
+    <button type="submit">Identify Pill</button>
+  </form>
+
+  {% if image_path %}
+    <div class="card" style="margin-top: 20px;">
+      <h3>Uploaded Image</h3>
+      <img src="/{{ image_path }}" alt="Pill image" class="preview" style="max-width: 300px;" />
+    </div>
+  {% endif %}
+
+  {% if matches %}
+    <div class="card" style="margin-top: 20px;">
+      <h3>Possible Matches</h3>
+      <ul class="matches-list">
+        {% for match in matches %}
+        <li class="match-item">
+          <div class="match-header">
+            <strong>{{ match.medicine_name }}</strong>
+            <span class="confidence-badge">{{ '%.0f'|format(match.confidence) }}%</span>
+          </div>
+          <p class="muted">{{ match.composition }}</p>
+          {% if match.manufacturer %}
+          <p class="muted">Manufacturer: {{ match.manufacturer }}</p>
+          {% endif %}
+          {% if loop.index0 == 0 and match.ai_best_explanation %}
+          <div class="notice info" style="margin-top:8px;">
+            <strong>AI rationale:</strong> {{ match.ai_best_explanation }}
+          </div>
+          {% endif %}
+          {% if match.match_reasons %}
+          <ul class="match-reasons">
+            {% for reason in match.match_reasons %}
+            <li>{{ reason }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      <p class="hint" style="margin-top: 16px;">
+        ⚠️ AI identification is approximate. Always verify with your pharmacist or doctor.
+      </p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
+

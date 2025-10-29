@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env
+.venv/
+venv/
+env/
+trial/.venv/
+
+# Editor/IDE
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# Logs and runtime
+*.log
+
+# Uploaded user files
+uploads/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Data files
+medicine.db
+Medicine.csv

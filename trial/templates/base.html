@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedScan - Medicine Identification System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header class="app-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+            <h1><a href="{{ url_for('index') }}">MedScan</a></h1>
+            <nav style="display: flex; gap: 16px; align-items: center;">
+                <div class="language-selector">
+                    <select onchange="window.location.href='/set-language/' + this.value" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--text); padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                        {% for code, name in supported_languages.items() %}
+                        <option value="{{ code }}" {% if current_lang == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if session.username %}
+                <a href="{{ url_for('profile') }}" class="nav-link">{{ session.username }}</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+        <nav class="main-nav">
+            <a href="{{ url_for('index') }}">Scan/Search</a>
+            <a href="{{ url_for('pill_identify') }}">Pill Identifier</a>
+            <a href="{{ url_for('check_interactions') }}">Interactions</a>
+            <a href="{{ url_for('chatbot') }}">Chatbot</a>
+        </nav>
+    </header>
+    <main class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="app-footer">Built with Flask + AI Features | MedScan Medicine Identification System</footer>
+</body>
+</html>
+
+

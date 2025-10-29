@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+  <h1 style="margin-bottom: 24px;">Your Medical Profile</h1>
+
+  <section class="card" style="margin-bottom: 20px;">
+    <h2>Personal Information</h2>
+    <form method="post" action="{{ url_for('profile') }}" class="form-group">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        <div>
+          <label for="age">Age</label>
+          <input type="number" id="age" name="age" value="{{ profile.age or '' }}" min="1" max="150" />
+        </div>
+        <div>
+          <label for="weight_kg">Weight (kg)</label>
+          <input type="number" id="weight_kg" name="weight_kg" value="{{ profile.weight_kg or '' }}" step="0.1" min="1" />
+        </div>
+        <div>
+          <label for="height_cm">Height (cm)</label>
+          <input type="number" id="height_cm" name="height_cm" value="{{ profile.height_cm or '' }}" min="1" />
+        </div>
+        <div>
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender">
+            <option value="">Select...</option>
+            <option value="male" {% if profile and profile.gender == 'male' %}selected{% endif %}>Male</option>
+            <option value="female" {% if profile and profile.gender == 'female' %}selected{% endif %}>Female</option>
+            <option value="other" {% if profile and profile.gender == 'other' %}selected{% endif %}>Other</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" style="margin-top: 16px;">Save Profile</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Allergies</h2>
+    {% if allergies %}
+      <ul class="allergy-list">
+        {% for allergy in allergies %}
+        <li>
+          <strong>{{ allergy.allergen_name }}</strong>
+          {% if allergy.allergen_type %}({{ allergy.allergen_type }}){% endif %}
+          <span class="severity-badge severity-{{ allergy.severity }}">{{ allergy.severity }}</span>
+          {% if allergy.notes %}<p class="muted">{{ allergy.notes }}</p>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No allergies recorded. Add one below.</p>
+    {% endif %}
+
+    <h3 style="margin-top: 20px;">Add Allergy</h3>
+    <form method="post" action="{{ url_for('add_allergy') }}" class="form-group">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        <div>
+          <label for="allergen_name">Allergen Name *</label>
+          <input type="text" id="allergen_name" name="allergen_name" required placeholder="e.g., Paracetamol, Penicillin" />
+        </div>
+        <div>
+          <label for="allergen_type">Type</label>
+          <input type="text" id="allergen_type" name="allergen_type" placeholder="e.g., Drug, Food" />
+        </div>
+        <div>
+          <label for="severity">Severity</label>
+          <select id="severity" name="severity">
+            <option value="mild">Mild</option>
+            <option value="moderate" selected>Moderate</option>
+            <option value="severe">Severe</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top: 16px;">
+        <label for="notes">Notes (optional)</label>
+        <textarea id="notes" name="notes" rows="2" placeholder="Additional details..."></textarea>
+      </div>
+      <button type="submit" style="margin-top: 16px;">Add Allergy</button>
+    </form>
+  </section>
+</div>
+{% endblock %}
+
