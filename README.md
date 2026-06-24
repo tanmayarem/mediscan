@@ -1,6 +1,6 @@
-#MEDIScan – AI-Based Medicine Identification System
+MEDIScan – AI-Based Medicine Identification System
 
-**MEDScan** is an **AI-powered healthcare web application** that identifies medicines using **image processing and Optical Character Recognition (OCR)**. The system extracts and analyzes text from medicine packaging to provide structured information such as **medicine name, composition, and description** through an intuitive web interface.
+**MEDIScan** is an **AI-powered healthcare web application** that identifies medicines using **image processing and Optical Character Recognition (OCR)**. The system extracts and analyzes text from medicine packaging to provide structured information such as **medicine name, composition, and description** through an intuitive web interface.
 
 This project demonstrates practical implementation of **Artificial Intelligence, OCR, Flask-based backend development, and database management**, making it suitable for academic evaluation and industry-level screening.
 
